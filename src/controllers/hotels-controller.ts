@@ -7,25 +7,22 @@ import { number } from "joi";
 
 export async function getHotels(req: AuthenticatedRequest, res:Response){
     const userId =  Number(req.userId);
-
-
+    
     try{
-
         await hotelsService.findDataById(userId)
-
         const hotels = await hotelsService.getHotel()
 
         const listHotels = hotels.map(hotel => hotel)
-
+        console.log('hoteis a seguir => ', hotels, listHotels)
         return res.status(httpStatus.OK).send(listHotels)
 
     }catch(error){
-        console.log(error)
+         console.log(error)
         if(error.name ==='NotFoundError'){
-            return res.sendStatus(httpStatus.NOT_FOUND)
+            return res.sendStatus(404)
         }
         if(error.name ==='payment required'){
-            return res.status(400).send('payment required')
+            return res.sendStatus(402)
         }
         return res.sendStatus(httpStatus.BAD_REQUEST);
     }
@@ -43,15 +40,16 @@ export async function getRooms(req: AuthenticatedRequest, res:Response){
        
         const hotels = await hotelsService.getRooms(hotelId)
 
+
         return res.status(httpStatus.OK).send(hotels)
 
     }catch(error){
         console.log(error)
         if(error.name ==='NotFoundError'){
-            return res.sendStatus(httpStatus.NOT_FOUND)
+            return res.sendStatus(404)
         }
         if(error.name ==='payment required'){
-            return res.status(400).send('payment required')
+            return res.sendStatus(402)
         }
 
 

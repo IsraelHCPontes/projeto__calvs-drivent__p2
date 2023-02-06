@@ -1,6 +1,7 @@
 import hotelsRepository from "@/repositories/hotels-repository";
 import { notFoundError } from "@/errors";
 import { Response } from "express";
+import { ApplicationError} from "@/protocols";
 
 async function findDataById(userId:number) {
       
@@ -16,11 +17,15 @@ async function findDataById(userId:number) {
          }
 
          if(ticket.TicketType.isRemote || !ticket.TicketType.includesHotel){
-            throw (()=> {
-             return {name: 'payment required'}
+            throw (():ApplicationError=> {
+             return {
+                name: 'payment required',   
+                message: "No result for this search!",
+                }
             })
-         }
-       
+        }
+
+        return;
 }
 
 async function getHotel() {
