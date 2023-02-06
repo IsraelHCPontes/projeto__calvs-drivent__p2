@@ -16,8 +16,8 @@ async function findDataById(userId:number) {
          }
 
          if(ticket.TicketType.isRemote || !ticket.TicketType.includesHotel){
-            throw ((res: Response)=> {
-             return  res.status(404).send('payment required')
+            throw (()=> {
+             return {name: 'payment required'}
             })
          }
        
