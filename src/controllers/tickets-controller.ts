@@ -4,6 +4,8 @@ import { Response } from "express";
 import httpStatus from "http-status";
 
 export async function getTicketTypes(req: AuthenticatedRequest, res: Response) {
+ 
+
   try {
     const ticketTypes = await ticketService.getTicketTypes();
 

@@ -1,13 +1,33 @@
 import hotelsRepository from "@/repositories/hotels-repository";
+import { notFoundError } from "@/errors";
+import { Response } from "express";
 
-async function getHotels() {
+async function findDataById(userId:number) {
       
-        const hotels = await hotelsRepository.findHotels()
+        const enrollment = await hotelsRepository.findEnrollment(userId)
+       
+        if(!enrollment){
+         throw notFoundError()
+        }
+        const ticket = await hotelsRepository.findTikets(enrollment.id)
+        
+        if(!ticket){
+          throw notFoundError()
+         }
 
-        const hotel = hotels.map(hotel => hotel)
-
-        return hotel
+         if(ticket.TicketType.isRemote || !ticket.TicketType.includesHotel){
+            throw ((res: Response)=> {
+             return  res.status(404).send('payment required')
+            })
+         }
+       
 }
+
+async function getHotel() {
+    const hotels = await hotelsRepository.getHotel()
+    return hotels
+}
+
 
 async function getRooms(hotelId: number) {
       
@@ -18,7 +38,8 @@ async function getRooms(hotelId: number) {
 
 
 const hotelsService = {
-    getHotels,
+    findDataById,
+    getHotel,
     getRooms
   };
   

@@ -6,12 +6,18 @@ import httpStatus from "http-status";
 import { number } from "joi";
 
 export async function getHotels(req: AuthenticatedRequest, res:Response){
+    const userId =  Number(req.userId);
+
 
     try{
 
-        const hotels = await hotelsService.getHotels()
+        await hotelsService.findDataById(userId)
 
-        return res.status(httpStatus.OK).send(hotels)
+        const hotels = await hotelsService.getHotel()
+
+        const listHotels = hotels.map(hotel => hotel)
+
+        return res.status(httpStatus.OK).send(listHotels)
 
     }catch(error){
         console.log(error)
@@ -21,11 +27,14 @@ export async function getHotels(req: AuthenticatedRequest, res:Response){
 }
 
 
-export async function getRooms(req: Request, res:Response){
+export async function getRooms(req: AuthenticatedRequest, res:Response){
     const hotelId = Number(req.params.hotelId)
+    const userId =  Number(req.userId);
 
     try{
 
+        await hotelsService.findDataById(userId)
+       
         const hotels = await hotelsService.getRooms(hotelId)
 
         return res.status(httpStatus.OK).send(hotels)
