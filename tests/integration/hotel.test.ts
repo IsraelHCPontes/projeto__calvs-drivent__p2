@@ -51,6 +51,15 @@ describe("GET /hotels",  () =>{
              const result = await server.get("/hotels").set("Authorization", `Bearer ${token}`);
              console.log('a seguir result e outros =>', result.status)
              expect(result.status).toBe(404)});
+
+             it("should respond with status 404 when data OK", async () => {
+                const user = await createUser();
+                const token = await generateValidToken(user);
+                 await createEnrollmentWithAddress(user);
+               
+                const result = await server.get("/hotels").set("Authorization", `Bearer ${token}`);
+                console.log('a seguir result e outros =>', result.status)
+                expect(result.status).toBe(404)});
         
     })
 
@@ -94,3 +103,5 @@ describe("GET /hotels",  () =>{
                  const result = await server.get("/hotels").set("Authorization", `Bearer ${token}`);
                  console.log('a seguir result e outros =>', result.status)
                  expect(result.status).toBe(404)});
+
+              })
