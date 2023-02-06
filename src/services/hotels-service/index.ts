@@ -3,32 +3,29 @@ import { notFoundError } from "@/errors";
 import { Response } from "express";
 import { ApplicationError} from "@/protocols";
 
-async function findDataById(userId:number) {
-      
-        const enrollment = await hotelsRepository.findEnrollment(userId)
+
+async function getHotel(userId: number) {
+
+    const enrollment = await hotelsRepository.findEnrollment(userId)
        
-        if(!enrollment){
-         throw notFoundError()
-        }
-        const ticket = await hotelsRepository.findTikets(enrollment.id)
-        
-        if(!ticket){
-          throw notFoundError()
-         }
+    if(!enrollment){
+     throw notFoundError()
+    }
+    const ticket = await hotelsRepository.findTikets(enrollment.id)
+    
+    if(!ticket){
+      throw notFoundError()
+     }
 
-         if(ticket.TicketType.isRemote || !ticket.TicketType.includesHotel){
-            throw (():ApplicationError=> {
-             return {
-                name: 'payment required',   
-                message: "No result for this search!",
-                }
-            })
-        }
+     if(ticket.TicketType.isRemote || !ticket.TicketType.includesHotel){
+        throw (():ApplicationError=> {
+         return {
+            name: 'payment required',   
+            message: "No result for this search!",
+            }
+        })
+    }
 
-        return;
-}
-
-async function getHotel() {
     const hotels = await hotelsRepository.getHotel()
     return hotels
 }
@@ -43,7 +40,6 @@ async function getRooms(hotelId: number) {
 
 
 const hotelsService = {
-    findDataById,
     getHotel,
     getRooms
   };

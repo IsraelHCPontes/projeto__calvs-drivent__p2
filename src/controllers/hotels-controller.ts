@@ -3,14 +3,14 @@ import { AuthenticatedRequest } from "@/middlewares";
 
 import hotelsService from "@/services/hotels-service";
 import httpStatus from "http-status";
-import { number } from "joi";
+
 
 export async function getHotels(req: AuthenticatedRequest, res:Response){
     const userId =  Number(req.userId);
     
     try{
-        await hotelsService.findDataById(userId)
-        const hotels = await hotelsService.getHotel()
+        
+        const hotels = await hotelsService.getHotel(userId)
 
         const listHotels = hotels.map(hotel => hotel)
         console.log('hoteis a seguir => ', hotels, listHotels)
@@ -24,7 +24,7 @@ export async function getHotels(req: AuthenticatedRequest, res:Response){
         if(error.name ==='payment required'){
             return res.sendStatus(402)
         }
-        return res.sendStatus(httpStatus.BAD_REQUEST);
+        return res.sendStatus(438);
     }
 
 }
@@ -36,7 +36,7 @@ export async function getRooms(req: AuthenticatedRequest, res:Response){
 
     try{
 
-        await hotelsService.findDataById(userId)
+       
        
         const hotels = await hotelsService.getRooms(hotelId)
 
